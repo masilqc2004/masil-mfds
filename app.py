@@ -29,7 +29,10 @@ st.set_page_config(
 @st.cache_resource(ttl=86400, show_spinner="데이터 로드 중... (최초 실행 시 1~2분 소요)")
 def get_data(force: bool = False):
     sync_info = sync_from_drive(force=force)
-    perf = load_performance(sync_info["performance_files"])
+    perf = load_performance(
+        xlsx_paths=sync_info["performance_files"],
+        parquet_paths=sync_info.get("performance_fixed_files", []),
+    )
     master = load_master(sync_info["master_file"])
     return perf, master, sync_info
 
